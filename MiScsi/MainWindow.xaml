@@ -1,0 +1,76 @@
+<Window
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:MiScsi"
+        xmlns:System="clr-namespace:System;assembly=mscorlib" x:Class="MiScsi.MainWindow"
+        mc:Ignorable="d"
+        Title="MiSCSI" Height="450" Width="800" x:Name="mainWindow">
+    <Window.CommandBindings>
+        <CommandBinding Command="local:MainWindowCommands.Refresh" CanExecute="Iscsi_CanExecute" Executed="Refresh_Executed"/>
+        <CommandBinding Command="local:MainWindowCommands.ToggleConnected" CanExecute="Iscsi_CanExecute" Executed="ToggleConnection_Executed"/>
+    </Window.CommandBindings>
+    <Grid>
+        <DockPanel>
+            <StackPanel DockPanel.Dock="Top" Orientation="Horizontal">
+                <StackPanel.Resources>
+                    <Style TargetType="{x:Type Button}">
+                        <Setter Property="Margin" Value="4,4,0,4"/>
+                        <Setter Property="Padding" Value="10,4"/>
+                    </Style>
+                </StackPanel.Resources>
+                <Button  Name="go" Content="Refresh" Command="local:MainWindowCommands.Refresh"/>
+            </StackPanel>
+
+            <DataGrid Name="connectionsGrid" AutoGenerateColumns="False" Margin="4">
+                <DataGrid.Columns>
+
+                    <DataGridTemplateColumn Header="Connected">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <TextBlock HorizontalAlignment="Center">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="❌"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                    <Setter Property="Text" Value="✔"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+                    <DataGridTextColumn Header="Node" Binding="{Binding NodeAddress}" />
+                    <DataGridTemplateColumn Header="" Width="100">
+                        <DataGridTemplateColumn.CellTemplate>
+                            <DataTemplate>
+                                <Button Command="local:MainWindowCommands.ToggleConnected">
+                                    <Button.Content>
+                                        <TextBlock>
+                                            <TextBlock.Style>
+                                                <Style TargetType="TextBlock">
+                                                    <Setter Property="Text" Value="Connect"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsConnected}" Value="True">
+                                                            <Setter Property="Text" Value="Disconnect"/>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </TextBlock.Style>
+                                        </TextBlock>
+                                    </Button.Content>
+                                </Button>
+                            </DataTemplate>
+                        </DataGridTemplateColumn.CellTemplate>
+                    </DataGridTemplateColumn>
+
+                </DataGrid.Columns>
+            </DataGrid>
+        </DockPanel>
+
+    </Grid>
+</Window>
